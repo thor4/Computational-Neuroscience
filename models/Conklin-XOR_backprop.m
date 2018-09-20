@@ -121,11 +121,3 @@ set(gca,'color','k','ylim',[0 1],'xlim',[0 size(inp1_learning,2)+0.05*size(inp1_
 set(gcf,'color','w');
 xlabel('# of Examples','FontSize', 20), ylabel('Prediction','FontSize', 20)
 title(sprintf('XOR Learning Curve\n sigma=%.2f noise=%.2f',alpha,noise),'FontSize', 24);
-
-
-
-
-%this is how you do 3 classes for the iris dataset
-% target_tri = [1 0 0;...
-%     0 1 0...
-%     0 0 1];
