@@ -3,9 +3,6 @@
 training_data = [1 1; 0 1; 1 0; 0 0];
 target = [0; 1; 1; 0];
 
-% Class1 = NOT_XOR, Class2 = XOR, so this would allow for 2 output units
-% target_dual = [1 0; 0 1; 0 1; 1 0];
-
 % define network structure - 2 layers
 inpN = 2; % input units
 hidN = 2; % hidden units
@@ -32,8 +29,6 @@ for eN = 1:exampN
     temp_targ = target(id); % choose associated target for example
     % calculate activity of hidden layer based on input * weights
     hidInp = [temp_inp 1] * weights1; %the bias unit is 1
-    % this is matrix multiplication by hand:
-    % temp_inp(1).*weights1(1,1) + temp_inp(2).*weights1(2,1)+1.*weigths
     % now pass input through the activation (act) function (sigmoid)
     hidAct = 1./(1+exp(-hidInp)); % sigmoid activation function
     % now output activity
