@@ -34,7 +34,8 @@ for tN = 1:trainingN
         distance_vec(oN)=sum(abs(weights(:,oN)-inp'));
     end
     
-    %now determine the winning unit
+    % now determine the winning weight vector connecting input to winning
+    % output neuron
     winner=find(distance_vec==min(distance_vec));
     
     %now calulate diff between activity pattern and 
