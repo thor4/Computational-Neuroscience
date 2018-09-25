@@ -36,33 +36,38 @@ for tN = 1:trainingN
     
     % now determine the winning weight vector connecting input to winning
     % output neuron
-    winner=find(distance_vec==min(distance_vec));
+    winner = find(distance_vec == min(distance_vec));
     
-    %now calulate diff between activity pattern and 
+    % now initiate learning for winning neuron by updating associated 
+    % weight vector
     weights(:,winner) = weights(:,winner) + alpha.*(inp' - weights(:,winner));
     
-    % now update weights for neighboring units to winner
-    % update all the same for this example
-    if winner>1 %deal with edge case, no wrap-around
+    % now update weights for neighboring units to winner (neighborhood
+    % function). update all the same for this example
+    if winner > 1 % deal with edge case, no wrap-around
         weights(:,winner-1) = weights(:,winner-1) + alpha.*(inp' - weights(:,winner-1));
     end
-    if winner<300
+    if winner < outN
         weights(:,winner+1) = weights(:,winner+1) + alpha.*(inp' - weights(:,winner+1));
     end
+    
+    % visualize how the weights vectors update according to the learning
     
     figure(1)
     clf
     scatter(training_hist(:,1),training_hist(:,2),'rX');
     hold on
-    scatter(weights1,:),weights(1,:),'b0');
+%     scatter(weights(1,:),weights(1,:),'bO'); hold on
+%     scatter(weights(2,:),weights(2,:),'gO');
+    scatter(weights(1,:),weights(2,:),'bO');
     hold off
     drawnow
-    pause(.001)
+    pause(.1)
     %this gives you the main clusters, weights go to them
-    
-    scatter(x_coord,y_coord)
-    hold on
-    drawnow
+%     
+%     scatter(x_coord,y_coord)
+%     hold on
+%     drawnow
 end
 
 
