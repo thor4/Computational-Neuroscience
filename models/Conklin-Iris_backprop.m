@@ -103,7 +103,7 @@ subplot(3,1,1)
 plot(smooth(class1_accuracy,101),'m'), set(gca,'XTick',[]);
 set(gca,'color','k','xlim',[0 size(class1_accuracy,2)+0.05*size(class1_accuracy,2)])
 title('Class 1','FontSize', 14);
-ylabel('?(Error^2) MA 101 trials','FontSize', 12)
+ylabel('?(Error^2) MA 101 trials','FontSize', 12) % alt-228 for sigma
 subplot(3,1,2)
 plot(smooth(class2_accuracy,101),'c'), set(gca,'XTick',[]);
 set(gca,'color','k','xlim',[0 size(class1_accuracy,2)+0.05*size(class1_accuracy,2)])
