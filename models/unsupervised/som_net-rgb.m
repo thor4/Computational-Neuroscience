@@ -1,7 +1,8 @@
 % RGB Self Organizing Map
 % setup network
+inpN = 3;
 dim = 20; % dimensions of the 2d map
-net = rand(dim,dim,3); % setup 2d map of dim x dim units
+net = rand(dim,dim,inpN); % setup 2d map of dim x dim units
 figure(1)
 imshow(net,'InitialMagnification','fit'); % visualize to ensure random rgb image
 title('Random RGB');
