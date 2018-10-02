@@ -51,7 +51,7 @@ for tN = 1:trainingN
         weights(:,winner+1) = weights(:,winner+1) + alpha.*(inp' - weights(:,winner+1));
     end
     
-    % visualize how the weights vectors update according to the learning
+    % visualize how the weight vectors update according to the learning
     
     figure(1)
     clf
@@ -63,19 +63,5 @@ for tN = 1:trainingN
     hold off
     drawnow
     pause(.1)
-    %this gives you the main clusters, weights go to them
-%     
-%     scatter(x_coord,y_coord)
-%     hold on
-%     drawnow
+    % this gives you the main clusters, weights go to them
 end
-
-
-%need to extend this to the 2 dimensional edge case of the iris dataset
-% use distance data to identify different regions in the 2-d map of iris
-% dataset. distance data is the 4 features differenced from the actual. the
-% dividing lines between the species determine the map. need to show region
-% "boundaries" and the labels for each region
-
-% for r,g,b randomly start with a number between 0,1 for red, 0,1 for 
-% green, 0,1 for blue

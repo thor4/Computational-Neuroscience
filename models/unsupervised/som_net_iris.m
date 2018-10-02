@@ -5,7 +5,7 @@ classes = csvread('iris_classes.csv');
 % setup network
 tic
 inpN = 4; % number of input units
-dim = 100; % number of output units
+dim = 35; % number of output units
 net = randn(dim,dim,inpN).*.1;
 alpha = 0.1; % learning rate
 trainingN = 1000000; % number of training examples
@@ -110,66 +110,66 @@ toc
 
 % visualize average distance matrix for each class
 % no transformation
-figure(6), clf
+figure(1), clf
 subplot(131)
 imagesc(class1_diff_avg)
 % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-set(gca,'xlim',[1 35],'ylim',[31,50],'ydir','norm')
+set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
 title('class 1'), colorbar
-% c = colorbar; set(get(c,'label'),'string','MI (baseline subtracted)');    
-% set(gca,'FontName','Times New Roman','Fontsize', 14);
 subplot(132)
 imagesc(class2_diff_avg)
 % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-set(gca,'clim',[0,5],'xlim',[1 11],'ylim',[11,50],'ydir','norm')
+set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
 title('class 2'), colorbar
 subplot(133)
 imagesc(class3_diff_avg)
 % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-set(gca,'clim',[0,5],'xlim',[1 11],'ylim',[11,50],'ydir','norm')
+set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
 title('class 3'), colorbar
 % colormap(gray)
 suptitle(sprintf('no transform, %d iterations, %d dimensions',trainingN,dim));
 
 % log10 transformation
-figure(5), clf
+figure(2), clf
 subplot(131)
 imagesc(log10(class1_diff_avg))
 % set(gca,'clim',[-.075 .075],'yscale','log','ytick',round(logspace(log10(frex(1)),log10(frex(end)),6)))
-set(gca,'clim',[0.1,0.75],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
 title('class 1'), colorbar
 % c = colorbar; set(get(c,'label'),'string','MI (baseline subtracted)');    
 % set(gca,'FontName','Times New Roman','Fontsize', 14);
 subplot(132)
 imagesc(log10(class2_diff_avg))
-set(gca,'clim',[0.1,0.75],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
 title('class 2'), colorbar
 subplot(133)
 imagesc(log10(class3_diff_avg))
-set(gca,'clim',[0.1,0.75],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
 title('class 3'), colorbar
 colormap(winter)
 suptitle(sprintf('log(10) transform, %d iterations, %d dimensions',trainingN,dim));
 
 
 % exp() transformation (terrible discrimination)
-figure(6), clf
+figure(3), clf
 subplot(131)
 imagesc(exp(class1_diff_avg))
-% set(gca,'clim',[-.075 .075],'yscale','log','ytick',round(logspace(log10(frex(1)),log10(frex(end)),6)))
-set(gca,'clim',[mean(exp(class1_diff_avg(1:20,15:30)),'all')-4*std(exp(class1_diff_avg(1:20,15:30)),0,'all'),mean(exp(class1_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+% set(gca,'clim',[mean(exp(class1_diff_avg(1:22,:)),'all')-4*std(exp(class1_diff_avg(1:20,15:30)),0,'all'),mean(exp(class1_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0 50],'xlim',[1 22],'ydir','norm')
 title('class 1'), colorbar
 % c = colorbar; set(get(c,'label'),'string','MI (baseline subtracted)');    
 % set(gca,'FontName','Times New Roman','Fontsize', 14);
 subplot(132)
 imagesc(exp(class2_diff_avg))
-set(gca,'clim',[mean(exp(class2_diff_avg(1:20,15:30)),'all')-4*std(exp(class2_diff_avg(1:20,15:30)),0,'all'),mean(exp(class2_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+% set(gca,'clim',[mean(exp(class2_diff_avg(1:20,15:30)),'all')-4*std(exp(class2_diff_avg(1:20,15:30)),0,'all'),mean(exp(class2_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0 50],'xlim',[1 22],'ydir','norm')
 title('class 2'), colorbar
 subplot(133)
 imagesc(exp(class3_diff_avg))
-set(gca,'clim',[mean(exp(class3_diff_avg(1:20,15:30)),'all')-4*std(exp(class3_diff_avg(1:20,15:30)),0,'all'),mean(exp(class3_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+% set(gca,'clim',[mean(exp(class3_diff_avg(1:20,15:30)),'all')-4*std(exp(class3_diff_avg(1:20,15:30)),0,'all'),mean(exp(class3_diff_avg(1:20,15:30)),'all')],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
+set(gca,'clim',[0 50],'xlim',[1 22],'ydir','norm')
 title('class 3'), colorbar
-% colormap(winter)
+colormap(gray)
 suptitle(sprintf('exp() transform, %d iterations, %d dimensions',trainingN,dim));
 
 
