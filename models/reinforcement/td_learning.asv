@@ -27,16 +27,13 @@ for tN = 1:trainN % which trial
             current_reward = 0;
         end
         time_representation = 0.*time_representation; % reset to 0
-        if (timeN>10)
-            time_representation(timeN) = 1; %first stimulus
-        end
         time_representation(timeN) = 1; % assign current time a value of 1
         % step 1 calculate predicted reward
         current_prediction = sum(value_prediction.*time_representation);
         % step 2 calculate prediction error, 2nd version diff from slides
         prediction_error = current_reward+gamma.*current_prediction-last_prediction;
         % step 3 calculate weight update
-        if (timeN > 1)
+        if (timeN>1)
             value_prediction(timeN-1)=value_prediction(timeN-1)+alpha.*prediction_error;
         end
         
