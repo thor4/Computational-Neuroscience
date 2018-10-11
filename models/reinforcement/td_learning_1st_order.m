@@ -81,16 +81,5 @@ legend('trial 501 (first extinction)',...
     'trial 1000 (after extinction completes)','FontSize',12,'Location','best')
 suptitle(sprintf('1st Order Conditioning w/ Extinction Using TD Learning\nlearning rate: %1.2f, discount rate: %1.2f, reward magnitude: %d, reward duration: %d, trials: %d, time steps: %d',alpha,gamma,lambda+1,lambda_duration,trainN,time_steps))
 
-mesh(prediction_error_mat);
-xlabel('time step'), ylabel('trial'), zlabel('error')
-
-% figure(2), clf
-% plot(prediction_error_mat(1,:)); hold on
-% plot(prediction_error_mat(100,:)); %100th trial
-% xlabel('time step'), ylabel('error')
-% legend('1st trial','100th trial')
-% % this should show the reward backing up to the first & second stimulus,
-% % ramp to second then back down and ramp again
-% plot(value_prediction_mat(150,:),'LineWidth',5); % shows 150th trial with predicted value for y-axis
-    
-    
+% mesh(prediction_error_mat);
+% xlabel('time step'), ylabel('trial'), zlabel('error')    

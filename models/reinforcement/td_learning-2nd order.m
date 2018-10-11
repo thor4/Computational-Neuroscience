@@ -1,18 +1,18 @@
 % temporal difference learning model
 % extension of the rescorla-wagner model
 alpha=.25; % learning rate
+gamma = 0.9; % discount rate
 lambda=1; % reward magnitude (strength)
-gamma = 0.9; % discount factor (rate)
 lambda_duration = 1; % reward duration, length reward is active
 
 trainN = 1000; % number of training examples
 
-time_steps=5; % how long from stimulus to reward
+time_steps=50; % how long from stimulus to reward
 
-time_representation = zeros(1,time_steps); %representation of current time for stimulus 1. vector to keep track of current time-step. which is active and which are inactive. represents current time
-time_representation2 = zeros(1,time_steps); %representation of current time for stimulus 2. representation of time relative to onset of each individual stimulus
-value_prediction = zeros(1,time_steps); %keeps track of values for each time step. prediction weights
-value_prediction2=zeros(1,time_steps); % prediction weights - stimulus 2
+time_representation = zeros(1,time_steps); %representation of current time for stimulus 1. 
+time_representation2 = zeros(1,time_steps); %representation of current time for stimulus 2. 
+value_prediction = zeros(1,time_steps); % keeps track of values for each time step. prediction weights
+value_prediction2 = zeros(1,time_steps); % prediction weights - stimulus 2
 %keep record of each value for all trials
 value_prediction_mat = zeros(trainN,time_steps);
 prediction_error_mat=zeros(trainN,time_steps);
