@@ -1,0 +1,27 @@
+% drift diffusion model
+% start with defining parameters to setup diffusion process
+% response is positive or negative
+starting_point = 0; %initial starting point
+drift_rate = 0.001; % can be positive or negative, positive here, toward 'positive' resp
+upper_decision_boundary = 1; %arbitrary, could be .5 or 100, scaling issue
+lower_decision_boundary = -1;
+noise = 0.01; %std of a norm distrib (gaussian noise)
+
+%don't know how long this will take (since it's random), in contrast with 
+% td learning, when we knew exactly how many timesteps it took. so use a
+% while loop
+
+current_position=starting_point; %keep track of curr position
+noResp=1; %indicates neither boundary has been hit yet, no resp made
+while noResp==1
+    
+    delta_position = drift_rate + randn.*noise; %get change in position
+    current_position=current_position+delta_position; % update the position
+    
+    %check if the boundaries are hit
+    if current_position>=1 %upper decision boundary
+        noResp=0; %gets us out of while loop
+        upperN = upperN+1;
+
+
+if currentPos>ub %upper response
