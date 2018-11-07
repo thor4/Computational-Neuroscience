@@ -1,21 +1,28 @@
 % batch ddm
-% automatically cycles through noise parameter
-% try diff levels of this noise param and see what effect this has on
+% automatically cycles through drift parameter
+% try diff levels of this drift param and see what effect this has on
 % choices to go to lower or upper boundary
-noise_params = [0.01:0.01:0.1];
-
+drift_params = [-0.01:0.001:0.01];
+% initialized for checking probability of upper decision boundary
 probability_upper = [];
-probability_lower = [];
+% initialized for checking probability of lower decision boundary
+probability_lower = []; 
 
-for noiseN = 1:length(noise_params)
-    current_noise = noise_params(noiseN);
-    ddm
-    
+for driftN = 1:length(drift_params) %which drift param
+    current_drift = drift_params(driftN); %assign current drift param
+    ddm %run trialN trials
+    % save probability of getting upper decision boundary for current drift
+    % parameter
     probability_upper=[probability_upper upperN./(upperN+lowerN)];
 end
 
 %visualization
-figure(1)
-plot(noise_params,probability_upper)
+figure(3), clf
+plot(drift_params,probability_upper,'linew',3)
+xlabel('Drift parameter','FontSize',30), ylabel('Probability','FontSize',30)
+title('Prob of DDM Reaching Upper Decision Boundary','FontSize',36)
+export_fig prob_upper.pdf % export to pdf
 % as noise increases, the drift rate gets more impacted and the probability
 % of getting an upper decision gets lower
+% as drift increases, the probability of getting an upper decision
+% approaches 1
