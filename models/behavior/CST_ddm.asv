@@ -1,0 +1,91 @@
+% drift diffusion model
+% start with defining parameters to setup diffusion process
+% response is positive or negative
+starting_point = 0; %initial starting point/bias
+% starting_point = current_bias; %takes bias from grid search script
+drift_rate = 0.002; % can be positive or negative, positive here, toward 'positive' resp
+% drift_rate = current_drift; %takes drift from grid search script
+upper_decision_boundary = 1; %arbitrary, could be .5 or 100, scaling issue
+lower_decision_boundary = -1;
+noise = 0.05; %std of a norm distrib (gaussian noise)
+
+%percentage split between go vs change trials presented
+perc_go = 2/3;
+
+noResp=1; %indicates neither boundary has been hit yet, no resp made
+%how often go & change trials hit upper boundary in both conditions (high & low error)
+Go_Correct_LE=0; Go_Correct_HE=0; Change_Correct_LE=0; Change_Correct_HE=0; 
+%how often go & change trials hit lower boundary in both conditions (high & low error)
+Go_Error_LE=0; Go_Error_HE=0; Change_Error_LE=0; Change_Error_HE=0; 
+
+%how long go and change trials take to reach upper boundary in both
+%conditions (high & low error)
+Go_Correct_LE_RT=[]; Go_Correct_HE_RT=[]; Change_Correct_LE_RT=[]; Change_Correct_HE_RT=[];
+%how long go and change trials take to reach lower boundary in both
+%conditions (high & low error)
+Go_Error_LE_RT=[]; Go_Error_HE_RT=[]; Change_Error_LE_RT=[]; Change_Error_HE_RT=[];
+trialN = 10000; %run trialN instances of ddm
+
+for tN=1:trialN
+    time=0; %var to keep track of time
+%     positions = []; % initialize positions for each trial
+    noResp=1; current_position=starting_point; % start at bias for each trial
+    trialtype=randperm(2,1); %flip a coin for low or high error likelihood condition
+    while noResp==1 %haven't hit decision boundary yet
+
+        time = time+1;
+        delta_position = drift_rate + randn.*noise; %get change in position
+        current_position=current_position+delta_position; % update the position
+
+        %check if the boundaries are hit
+        if current_position>=1 %upper decision boundary (correct resp)
+            noResp=0; %gets us out of while loop
+            if trialtype==1 % low-error likelihood
+                if rand<=perc_go %go trial
+                    Go_Correct_LE=Go_Correct_LE+1; 
+                    Go_Correct_LE_RT=[Go_Correct_LE_RT time];
+                else %change trial
+                    Change_Correct_LE=Change_Correct_LE+1; 
+                    Change_Correct_LE_RT=[Change_Correct_LE_RT time];
+                end
+            else % high-error likelihood
+                if rand<=perc_go %go trial
+                    Go_Correct_HE=Go_Correct_HE+1; 
+                    Go_Correct_HE_RT=[Go_Correct_HE_RT time];
+                else %change trial
+                    Change_Correct_HE=Change_Correct_HE+1; 
+                    Change_Correct_HE_RT=[Change_Correct_HE_RT time];
+                end
+            end
+        end
+
+        if current_position<=-1 %lower decision boundary (incorrect resp)
+            noResp=0; %gets us out of while loop
+            if trialtype==1 % low-error likelihood
+                if rand<=perc_go %go trial
+                    Go_Error_LE=Go_Error_LE+1;
+                    Go_Error_LE_RT=[Go_Error_LE_RT time];
+                else %change trial
+                    Change_Error_LE=Change_Error_LE+1;
+                    Change_Error_LE_RT=[Change_Error_LE_RT time];
+                end
+            else % high-error likelihood
+                if rand<=perc_go %go trial
+                    Go_Error_HE=Go_Error_HE+1;
+                    Go_Error_HE_RT=[Go_Error_HE_RT time];
+                else %change trial
+                    Change_Error_HE=Change_Error_HE+1;
+                    Change_Error_HE_RT=[Change_Error_HE_RT time];
+                end
+            end
+        end
+%         positions=[positions current_position];
+
+    end %end while loop, single run through drift diffusion model
+end
+
+% accuracy = [ high error likelihood go, high error likelihood change, 
+%              low error likelihood go, low error likelihood change ]
+P_Outcome = [Go_Correct_HE./(Go_Correct_HE+Go_Error_HE) Change_Correct_HE./(Change_Correct_HE+Change_Error_HE)...
+    Go_Correct_LE./(Go_Correct_LE+Go_Error_LE) Change_Correct_LE./(Change_Correct_LE+Change_Error_LE)]; 
+
