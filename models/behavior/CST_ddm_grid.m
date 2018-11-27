@@ -19,7 +19,7 @@ cond_perf = [he_go_perf he_change_perf le_go_perf le_change_perf];
 % try diff levels of the drift & bias params to see what effect this has on
 % accuracy
 drift_range = -0.01:0.001:0.01;
-bias_range = -0.7:0.001:0.7;
+bias_range = -0.7:0.1:0.7;
 
 % % zoom in on drift_range(11:20)
 % drift_range = 0:.0001:0.009;
@@ -31,10 +31,14 @@ tic
 for condN=1:4
     for dN=1:length(drift_range)
         for bN=1:length(bias_range)
+            accuracy=[]; %init mat to hold predicted accuracy values
             current_drift = drift_range(dN); %set current drift
             current_bias = bias_range(bN); %set current bias
-            CST_ddm;
-            squared_distance = sum((cond_perf(condN) - probability_upper).^2);
+            for ddmN=1:4 %run ddm model to generate 4 predicted accuracies
+                CST_ddm;
+                accuracy=[accuracy probability_upper];
+            end
+            squared_distance = sum((cond_perf(condN) - accuracy).^2);
             squared_distance_matrix(condN,dN,bN) = squared_distance;
     %             [r,p] = corr(cond_perf(condN)',P_Outcome');
     %         correlation_matrix(dN,bN) = r;
@@ -44,21 +48,21 @@ end
 toc
 
 %% visualization
-figure(2), clf
-subplot(221), imagesc(squeeze(squared_distance_matrix(1,:,:)))
-set(gca,'clim',[0 0.9]), colorbar
+figure(3), clf
+subplot(221), imagesc(-log(squeeze(squared_distance_matrix(1,:,:))))
+set(gca,'clim',[0 20]), colorbar
 xlabel('bias'), ylabel('drift'), title('high error likelihood go condition')
-subplot(222), imagesc(squeeze(squared_distance_matrix(2,:,:)))
-set(gca,'clim',[0 0.9]), colorbar
+subplot(222), imagesc(-log(squeeze(squared_distance_matrix(2,:,:))))
+set(gca,'clim',[0 20]), colorbar
 xlabel('bias'), ylabel('drift'), title('high error likelihood change condition')
-subplot(223), imagesc(squeeze(squared_distance_matrix(3,:,:)))
-set(gca,'clim',[0 0.9]), colorbar
+subplot(223), imagesc(-log(squeeze(squared_distance_matrix(3,:,:))))
+set(gca,'clim',[0 20]), colorbar
 xlabel('bias'), ylabel('drift'), title('low error likelihood go condition')
-subplot(224), imagesc(squeeze(squared_distance_matrix(4,:,:)))
-set(gca,'clim',[0 0.9]), colorbar
+subplot(224), imagesc(-log(squeeze(squared_distance_matrix(4,:,:))))
+set(gca,'clim',[0 20]), colorbar
 xlabel('bias'), ylabel('drift'), title('low error likelihood change condition')
-export_fig param_space_cond.png -transparent % no background
-export_fig param_space_cond.pdf % export to pdf
+export_fig param_space_cond_neg_log_transform.png -transparent % no background
+export_fig param_space_cond_neg_log_transform.pdf % export to pdf
 % figure(2), clf
 % imagesc(correlation_matrix), colorbar
 
@@ -77,6 +81,7 @@ writetable(T,'condition_params.txt');
 
 %% granular bias_range analysis
 [xcond1,ycond1] = find((squeeze(squared_distance_matrix(1,:,:))) == min(min(squeeze(squared_distance_matrix(1,:,:)))));
+[xcond1_neglog,ycond1_neglog] = find(((squeeze(squared_distance_matrix(1,:,:))).^.5) == min(min((squeeze(squared_distance_matrix(1,:,:))).^.5)));
 [xcond2,ycond2] = find((squeeze(squared_distance_matrix(2,:,:))) == min(min(squeeze(squared_distance_matrix(2,:,:)))));
 [xcond3,ycond3] = find((squeeze(squared_distance_matrix(3,:,:))) == min(min(squeeze(squared_distance_matrix(3,:,:)))));
 [xcond4,ycond4] = find((squeeze(squared_distance_matrix(4,:,:))) == min(min(squeeze(squared_distance_matrix(4,:,:)))));
