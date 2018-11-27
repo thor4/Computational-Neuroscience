@@ -18,8 +18,9 @@ cond_perf = [he_go_perf he_change_perf le_go_perf le_change_perf];
 
 % try diff levels of the drift & bias params to see what effect this has on
 % accuracy
-drift_range = -0.01:0.001:0.01;
-bias_range = -0.7:0.1:0.7;
+% drift_range = -0.01:0.001:0.01;
+% bias_range = -0.7:0.1:0.7;
+drift_range = 0:0.001:0.005; %granular search
 
 % % zoom in on drift_range(11:20)
 % drift_range = 0:.0001:0.009;
@@ -29,6 +30,15 @@ squared_distance_matrix = zeros(length(cond_perf),length(drift_range),length(bia
 
 tic
 for condN=1:4
+    if condN==1
+        bias_range = 0.05:0.001:0.15;
+    elseif condN==2
+        bias_range = -0.35:0.001:-0.25;
+    elseif condN==3
+        bias_range = 0.45:0.001:0.55;
+    else
+        bias_range = -0.15:0.001:-0.05; 
+    end
     for dN=1:length(drift_range)
         for bN=1:length(bias_range)
             accuracy=[]; %init mat to hold predicted accuracy values
@@ -66,11 +76,11 @@ export_fig param_space_cond_neg_log_transform.pdf % export to pdf
 % figure(2), clf
 % imagesc(correlation_matrix), colorbar
 
-% x=zeros(1,4); y=zeros(1,4); %init x & y coord of param space per cond
-% for condN=1:4 %find best params where minimum is most likely to be
-%     [x(condN),y(condN)] = find((squeeze(squared_distance_matrix(condN,:,:))) == min(min(squeeze(squared_distance_matrix(condN,:,:)))));
-% end
-% drift_range(x); bias_range(y); % best drift & bias param
+x=zeros(1,4); y=zeros(1,4); %init x & y coord of param space per cond
+for condN=1:4 %find best params where minimum is most likely to be
+    [x(condN),y(condN)] = find((squeeze(squared_distance_matrix(condN,:,:))) == min(min(squeeze(squared_distance_matrix(condN,:,:)))));
+end
+drift_range(x); bias_range(y); % best drift & bias param
 
 %% setup table
 Condition = {'high error likelihood go'; 'high error likelihood change'; ...
