@@ -43,8 +43,8 @@ for condN=1:4
 end
 toc
 
-%visualization
-figure(1), clf
+%% visualization
+figure(2), clf
 subplot(221), imagesc(squeeze(squared_distance_matrix(1,:,:)))
 set(gca,'clim',[0 0.9]), colorbar
 xlabel('bias'), ylabel('drift'), title('high error likelihood go condition')
@@ -62,15 +62,34 @@ export_fig param_space_cond.pdf % export to pdf
 % figure(2), clf
 % imagesc(correlation_matrix), colorbar
 
-x=zeros(1,4); y=zeros(1,4); %init x & y coord of param space per cond
-for condN=1:4 %find best params where minimum is most likely to be
-    [x(condN),y(condN)] = find((squeeze(squared_distance_matrix(condN,:,:))) == min(min(squeeze(squared_distance_matrix(condN,:,:)))));
-end
+% x=zeros(1,4); y=zeros(1,4); %init x & y coord of param space per cond
+% for condN=1:4 %find best params where minimum is most likely to be
+%     [x(condN),y(condN)] = find((squeeze(squared_distance_matrix(condN,:,:))) == min(min(squeeze(squared_distance_matrix(condN,:,:)))));
+% end
 % drift_range(x); bias_range(y); % best drift & bias param
 
-% setup table
+%% setup table
 Condition = {'high error likelihood go'; 'high error likelihood change'; ...
     'low error likelihood go'; 'low error likelihood change'};
 Drift = drift_range(x)'; Bias = bias_range(y)';
 T = table(Condition,Drift,Bias);
 writetable(T,'condition_params.txt');
+
+%% granular bias_range analysis
+[xcond1,ycond1] = find((squeeze(squared_distance_matrix(1,:,:))) == min(min(squeeze(squared_distance_matrix(1,:,:)))));
+[xcond2,ycond2] = find((squeeze(squared_distance_matrix(2,:,:))) == min(min(squeeze(squared_distance_matrix(2,:,:)))));
+[xcond3,ycond3] = find((squeeze(squared_distance_matrix(3,:,:))) == min(min(squeeze(squared_distance_matrix(3,:,:)))));
+[xcond4,ycond4] = find((squeeze(squared_distance_matrix(4,:,:))) == min(min(squeeze(squared_distance_matrix(4,:,:)))));
+
+%pull out values from sq dist mat
+sq_cond1 = diag(squeeze(squared_distance_matrix(1,xcond1,ycond1)));
+sq_cond2 = diag(squeeze(squared_distance_matrix(2,xcond2,ycond2)));
+sq_cond3 = diag(squeeze(squared_distance_matrix(3,xcond3,ycond3)));
+sq_cond4 = diag(squeeze(squared_distance_matrix(4,xcond4,ycond4)));
+%confirmed- all minimums from each condition are 0
+
+%identify the best-fit drift and bias parameters
+d_cond1 = drift_range(xcond1); b_cond1 = bias_range(ycond1);
+d_cond2 = drift_range(xcond2); b_cond2 = bias_range(ycond2);
+d_cond3 = drift_range(xcond3); b_cond3 = bias_range(ycond3);
+d_cond4 = drift_range(xcond4); b_cond4 = bias_range(ycond4);
