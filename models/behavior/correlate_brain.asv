@@ -1,0 +1,13 @@
+load('fmri_CST_data.mat')
+
+imagesc(img_sequence(:,:,1)), colormap(gray) %check it
+
+results_img=zeros(256,256); %store results
+
+for i=1:256
+    for j=1:256
+        
+        curr_vec=squeeze(img_sequence(i,j,:));
+        
+        [r,p] = corr(
+        
