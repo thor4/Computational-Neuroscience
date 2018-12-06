@@ -12,7 +12,7 @@ trial_sequence=importdata('TrialLabels.txt'); %load up the sequences
 
 %look for string matches
 hel_go=ismember(trial_sequence,'High Error Likelihood/GO');
-plot(hel_go) %confirm 1 shows existence of that trial
+% plot(hel_go) %confirm 1 shows existence of that trial
 hel_go_d=hel_go.*drift_parameters(1);
 hel_go=hel_go.*bias_parameters(1);
 
@@ -31,10 +31,10 @@ lel_change=lel_change.*bias_parameters(4);
 %prediction of the trial by trial change in the bias parameter
 activity_prediction_vector=hel_go+hel_change+lel_go+lel_change; %bias
 activity_prediction_vector_d=hel_go_d+hel_change_d+lel_go_d+lel_change_d; %drift
-
-figure(1), clf
-plot(activity_prediction_vector)
-%confirm that first trial is lel_go and that shows 0.472 bias
-plot(activity_prediction_vector_d)
+% 
+% figure(1), clf
+% plot(activity_prediction_vector)
+% %confirm that first trial is lel_go and that shows 0.472 bias
+% plot(activity_prediction_vector_d)
 
 %now correlate/regress these against brain activity
