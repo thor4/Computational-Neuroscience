@@ -41,7 +41,6 @@ delay_filt = filtfilt(b,a,squeeze(delay(chanN,:,:)));
 %% setup network
 inpN = size(delay,2); % number of input units
 dim = 50; % number of output units
-net = randn(dim,dim,inpN).*.1;
 alpha = 0.1; % learning rate
 trainingN = 10000; % number of training examples
 chan = size(delay,1);
@@ -49,6 +48,7 @@ chan = size(delay,1);
 
 tic
 for chanN=1:chan
+    net = randn(dim,dim,inpN).*.1; %init som
     % initialize class arrays to index difference values
     class1 = 0; class2 = 0; class3 = 0;
     for tN = 1:trainingN
@@ -144,7 +144,8 @@ for chanN=1:chan
     class1_diff_avg = mean(class1_diff,3);
     class2_diff_avg = mean(class2_diff,3);
     class3_diff_avg = mean(class3_diff,3);
-    figure(1), clf
+%     f1=figure('visible','off'), clf
+    f1=figure(1), clf
     subplot(131)
     imagesc(class1_diff_avg)
     % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
@@ -160,9 +161,11 @@ for chanN=1:chan
     % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
 %     set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
     title('class 3'), colorbar
-    export_fig (sprintf('chan%d dim%d raw.pdf',chanN,dim)); % export to pdf
+%     export_fig (sprintf('chan%d dim%d raw.pdf',chanN,dim)); % export to pdf
+    saveas(f1,(sprintf('chan%d dim%d raw.pdf',chanN,dim)));
     
-    figure(2), clf
+%     f2=figure('visible','off'), clf
+    f2=figure(2), clf
     subplot(131)
     imagesc(log10(class1_diff_avg))
     % set(gca,'clim',[-.075 .075],'yscale','log','ytick',round(logspace(log10(frex(1)),log10(frex(end)),6)))
@@ -179,7 +182,8 @@ for chanN=1:chan
 %     set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
     title('class 3'), colorbar
     colormap(winter)
-    export_fig (sprintf('chan%d dim%d log transform.pdf',chanN,dim)); % export to pdf
+%     export_fig (sprintf('chan%d dim%d log transform.pdf',chanN,dim)); % export to pdf
+    saveas(f2,(sprintf('chan%d dim%d log transform.pdf',chanN,dim)));
     clearvars class1_diff class2_diff class3_diff
 end
 toc
