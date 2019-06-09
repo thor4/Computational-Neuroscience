@@ -2,7 +2,8 @@
 %delayed match-to-sample working memory task
 
 %load delay-period lfp data and associated object classes (3)
-%areas x features (samples) x instances (good trials)
+%delay var: channels x features (samples) x instances (good trials)
+%obj var: 1 x instances (class labels)
 clear
 load('m2-day1_delay_obj.mat')
 
@@ -17,8 +18,9 @@ length(find(obj==(class_options(3)))) %total of class 3
 
 filtOrder = 3; % filter order, higher values = steeper roll off around the 
 %cutoff but too high and you're gonna get phase distortions
-x = 10;
-y = 30;
+x = 4; %lower limit (hz)
+y = 30; %upper limit (hz)
+chan = size(delay,1);
 sr = 1000;
 
 %[b,a] = butter(filtOrder,[xx,yy]/(sr/2),'bandpass'); % construct filter; xx 
@@ -27,7 +29,9 @@ sr = 1000;
 
 % filter your data using the coefficients you computed above and save the 
 % output. data should be an #samples x #trials matrix
-delay_filt = filtfilt(b,a,squeeze(delay(chanN,:,:)));  
+for chanN=1:chan
+    delay_filt(chan,:,:) = filtfilt(b,a,squeeze(delay(chanN,:,:)));  
+end
 
 % %% transformation 2: try looking at power from fft of entire delay period
 % 
@@ -44,7 +48,6 @@ dim = 50; % number of output units
 alpha = 0.1; % learning rate
 trainingN = 10000; % number of training examples
 chan = size(delay,1);
-% training_hist=[]; % initialize array to hold history of all values
 
 tic
 for chanN=1:chan
@@ -54,8 +57,8 @@ for chanN=1:chan
     for tN = 1:trainingN
         % generate random iris training example
         curr_samp = randperm(length(obj),1); % pick random number from 1-total instances
-        inp(1,1,:) = delay(chanN,:,curr_samp); % assign input
-%         inp(1,1,:) = delay_filt(:,curr_samp); % assign input
+%         inp(1,1,:) = delay(chanN,:,curr_samp); % assign input (raw)
+        inp(1,1,:) = delay_filt(chanN,:,curr_samp); % assign input (filter)
         % identify class associated with training example
         class = obj(curr_samp);
         
@@ -148,42 +151,32 @@ for chanN=1:chan
     f1=figure(1), clf
     subplot(131)
     imagesc(class1_diff_avg)
-    % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-%     set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
     title('class 1'), colorbar
     subplot(132)
     imagesc(class2_diff_avg)
-    % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-%     set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
     title('class 2'), colorbar
     subplot(133)
     imagesc(class3_diff_avg)
-    % set(gca,'clim',[0,6],'xlim',[0 20],'ylim',[15 30],'ydir','norm')
-%     set(gca,'clim',[0,4],'xlim',[1 16],'ylim',[1,25],'ydir','norm')
     title('class 3'), colorbar
 %     export_fig (sprintf('chan%d dim%d raw.pdf',chanN,dim)); % export to pdf
-    saveas(f1,(sprintf('chan%d dim%d raw.pdf',chanN,dim)));
+    export_fig (sprintf('chan%d dim%d raw filt.pdf',chanN,dim)); % export to pdf
+%     saveas(f1,(sprintf('chan%d dim%d raw.pdf',chanN,dim)));
     
 %     f2=figure('visible','off'), clf
     f2=figure(2), clf
     subplot(131)
     imagesc(log10(class1_diff_avg))
-    % set(gca,'clim',[-.075 .075],'yscale','log','ytick',round(logspace(log10(frex(1)),log10(frex(end)),6)))
-%     set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
     title('class 1'), colorbar
-    % c = colorbar; set(get(c,'label'),'string','MI (baseline subtracted)');    
-    % set(gca,'FontName','Times New Roman','Fontsize', 14);
     subplot(132)
     imagesc(log10(class2_diff_avg))
-%     set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
     title('class 2'), colorbar
     subplot(133)
     imagesc(log10(class3_diff_avg))
-%     set(gca,'clim',[0.1,0.75],'xlim',[1 16],'ylim',[1 30],'ydir','norm')
     title('class 3'), colorbar
     colormap(winter)
 %     export_fig (sprintf('chan%d dim%d log transform.pdf',chanN,dim)); % export to pdf
-    saveas(f2,(sprintf('chan%d dim%d log transform.pdf',chanN,dim)));
+    export_fig (sprintf('chan%d dim%d log transform filt.pdf',chanN,dim)); % export to pdf
+%     saveas(f2,(sprintf('chan%d dim%d log transform.pdf',chanN,dim)));
     clearvars class1_diff class2_diff class3_diff
 end
 toc
